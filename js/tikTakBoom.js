@@ -5,19 +5,26 @@ tikTakBoom = {
         gameStatusField,
         textFieldQuestion,
         textFieldAnswer1,
-        textFieldAnswer2
+        textFieldAnswer2,
+        textFieldStart,
+        textFieldEnd
     ) {
         this.boomTimer = 30;
         this.countOfPlayers = 2;
-        this.tasks = JSON.parse(tasks);
 
         this.timerField = timerField;
         this.gameStatusField = gameStatusField;
         this.textFieldQuestion = textFieldQuestion;
         this.textFieldAnswer1 = textFieldAnswer1;
         this.textFieldAnswer2 = textFieldAnswer2;
+        this.start = textFieldStart;
+        this.end = textFieldEnd;
 
-        this.needRightAnswers = 3;
+        this.needRightAnswers = 19;
+
+        this.tasks = JSON.parse(tasks);
+        this.checkJSON(this.tasks);
+
     },
 
     run() {
@@ -31,7 +38,7 @@ tikTakBoom = {
     },
 
     turnOn() {
-        this.gameStatusField.innerText += ` Вопрос игроку №${this.state}`;
+        this.gameStatusField.innerText = `Игра идет. Вопрос игроку №${this.state}`;
 
         const taskNumber = randomIntNumber(this.tasks.length - 1);
         this.printQuestion(this.tasks[taskNumber]);
@@ -45,8 +52,10 @@ tikTakBoom = {
         if (this.currentTask[value].result) {
             this.gameStatusField.innerText = 'Верно!';
             this.rightAnswers += 1;
+            this.boomTimer += 5;
         } else {
             this.gameStatusField.innerText = 'Неверно!';
+            this.boomTimer -= 5;
         }
         if (this.rightAnswers < this.needRightAnswers) {
             if (this.tasks.length === 0) {
@@ -108,6 +117,21 @@ tikTakBoom = {
             } else {
                 this.finish('lose');
             }
+        }
+    },
+
+    checkJSON(data) {
+        if (data.filter(val => !val.question).length) {
+            throw new Error('Нет одного или нескольких вопросов');
+        }
+        if (data.filter(val => val.answer1.result === true && val.answer2.result === true || val.answer1.result === false && val.answer2.result === false).length) {
+            throw new Error('Верный ответ не единственный');
+        }
+        if (data.filter(val => !val.question || !val.answer1 || !val.answer2).length) {
+            throw new Error('Пустой вопрос или один ответ');
+        }
+        if (data.length < 30) {
+            throw new Error('Вопросов меньше 30');
         }
     },
 }

@@ -6,18 +6,22 @@ body {
     width: 200px;
     background: #222;
     color: darkred;
-    padding: 16px 8px;
+    padding: 80px 8px;
     font-size: 64px;
     text-align: center;
     line-height: 1;
     user-select: none;
+    padding-bottom: 50px;
 }
 
 .timer-output-wrapper{
-    width: calc(100% - 24px);
+    width: 800px;
+    height: 170px;
     display: flex;
     flex-direction: row;
     align-content: center;
     justify-content: center;
     margin: 12px;
+    background-image: url(img/bomb.png);
+    background-size: cover;
 }
